@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Acrobatic Game - Juego de Acrobacias</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <div id="loading">Cargando...</div>
+    </div>
+
+    <!-- Mobile Touch Controls -->
+    <div id="mobile-controls" class="mobile-only">
+        <div class="control-section left-controls">
+            <button id="btn-left" class="control-btn direction-btn">
+                <span class="arrow">←</span>
+            </button>
+            <button id="btn-right" class="control-btn direction-btn">
+                <span class="arrow">→</span>
+            </button>
+        </div>
+
+        <div class="control-section center-info">
+            <div id="score-display">Puntos: 0</div>
+            <div id="level-display">Nivel: 1</div>
+        </div>
+
+        <div class="control-section right-controls">
+            <button id="btn-jump" class="control-btn action-btn">
+                <span class="label">Saltar</span>
+            </button>
+            <button id="btn-trick" class="control-btn action-btn">
+                <span class="label">Truco</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Info Overlay -->
+    <div id="game-info">
+        <div id="desktop-score">Puntos: 0</div>
+        <div id="desktop-level">Nivel: 1</div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

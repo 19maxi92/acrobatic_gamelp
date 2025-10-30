@@ -1,0 +1,35 @@
+# Node modules
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build files
+dist/
+build/
+*.apk
+*.aab
+
+# Capacitor
+android/
+ios/
+.capacitor/
+
+# Cordova
+platforms/
+plugins/
+www/
+
+# Temporary files
+*.tmp
+*.log
