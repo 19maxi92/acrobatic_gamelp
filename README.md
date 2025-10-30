@@ -11,6 +11,10 @@ Un juego de plataformas acrobático desarrollado con Phaser 3, optimizado para f
 - ✅ **Doble Salto**: Salta dos veces en el aire
 - ✅ **Sistema de Niveles**: Progresa a través de niveles cada vez más difíciles
 - ✅ **Optimizado para Móvil**: Botones grandes y fáciles de usar
+- 🆕 **Sistema de Combos**: Multiplica tus puntos con trucos consecutivos (inspirado en Tower Game)
+- 🆕 **Perfect Streak**: Racha de trucos perfectos con indicador visual 🔥
+- 🆕 **Feedback Háptico**: Vibración en saltos, trucos y caídas (web y móvil)
+- 🆕 **Animaciones Mejoradas**: Indicadores visuales de combo con animaciones fluidas
 
 ## 🎯 Controles
 
@@ -28,12 +32,22 @@ Un juego de plataformas acrobático desarrollado con Phaser 3, optimizado para f
 
 1. **Objetivo**: Muévete por las plataformas, realiza trucos y acumula puntos
 2. **Trucos**: Presiona el botón de truco mientras estás en el aire para rotar 360°
-3. **Puntos**:
+3. **Sistema de Puntos**:
    - Salto simple: +5 puntos
    - Doble salto: +10 puntos
-   - Truco completado: +50 puntos
-4. **Nivel**: Sube de nivel cada 300 puntos
-5. **Penalización**: Pierdes 50 puntos si caes fuera de la pantalla
+   - Truco completado: Base 50 pts × Multiplicador de combo × (1 + streak × 0.1)
+   - **Ejemplo**: Con combo 5x y streak 3: 50 × 2.0 × 1.3 = 130 puntos!
+4. **Combos**:
+   - Cada truco exitoso aumenta tu combo
+   - Multiplicador: 1 + (combo × 0.2)
+   - El combo se reinicia después de 3 segundos sin trucos
+5. **Perfect Streak** 🔥:
+   - Contador de trucos consecutivos
+   - Bonus adicional en puntos
+   - Visible en la esquina superior derecha
+6. **Nivel**: Sube de nivel cada 300 puntos
+7. **Penalización**: Pierdes 50 puntos y el combo si caes fuera de la pantalla
+8. **Vibración**: Siente feedback háptico en cada acción (móvil)
 
 ## 📦 Instalación y Ejecución
 
@@ -150,6 +164,32 @@ cordova build android
 - El sistema de física está optimizado para móvil
 - Los controles táctiles tienen un área de toque generosa (70x70px)
 - El juego se adapta automáticamente a cambios de orientación
+
+## 🎪 Inspiración del Tower Game
+
+Este juego integra características del juego "Torre de Acróbatas" (Stack Tower):
+
+### Características Implementadas:
+- **Sistema de Combos**: Multiplicador de puntos por acciones consecutivas
+- **Perfect Streak**: Contador de racha de trucos perfectos con emoji 🔥
+- **Feedback Háptico**: Vibración mediante Web Vibration API
+  - Light (10ms): Saltos
+  - Medium (50ms): Trucos exitosos
+  - Heavy (50-30-50ms): Caídas
+- **Animaciones Fluidas**: Indicadores visuales con animaciones CSS
+- **Sistema de Puntuación Complejo**: Multiplica por combo y streak
+
+### Código de Referencia:
+Para ver el análisis completo de las características del Tower Game y cómo fueron integradas, consulta:
+- `TOWER_FEATURES.md` - Análisis detallado de características
+- `components/game.js` (del repo Tower) - Código fuente original
+
+### Mejoras Futuras:
+- [ ] Sistema de wobble/tambaleo visual
+- [ ] Múltiples personajes acrobáticos
+- [ ] Dificultad progresiva más avanzada
+- [ ] Partículas y efectos visuales
+- [ ] Sonidos y música
 
 ## 📄 Licencia
 

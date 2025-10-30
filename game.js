@@ -36,6 +36,11 @@ let scoreText;
 let levelText;
 let gameStarted = false;
 
+// Combo System (inspired by Tower Game)
+let combo = 0;
+let perfectStreak = 0;
+let comboTimeout = null;
+
 // Mobile Controls
 let mobileControls = {
     left: false,
@@ -52,7 +57,8 @@ let playerState = {
     canDoubleJump: true,
     isPerformingTrick: false,
     trickRotation: 0,
-    velocityMultiplier: 1
+    velocityMultiplier: 1,
+    consecutiveTricks: 0
 };
 
 // Initialize Phaser Game
@@ -167,11 +173,13 @@ function handleInput() {
             // Normal jump
             player.body.setVelocityY(-450);
             playerState.canDoubleJump = true;
+            vibrate('light');
             addScore(5);
         } else if (playerState.canDoubleJump && !player.body.touching.down) {
             // Double jump
             player.body.setVelocityY(-400);
             playerState.canDoubleJump = false;
+            vibrate('light');
             addScore(10);
         }
     }
@@ -202,7 +210,31 @@ function completeTrick() {
     playerState.velocityMultiplier = 1;
     player.setRotation(0);
 
-    addScore(50);
+    // Increment combo and perfect streak
+    combo++;
+    perfectStreak++;
+    playerState.consecutiveTricks++;
+
+    // Vibration feedback (web & mobile)
+    vibrate('medium');
+
+    // Calculate points with combo multiplier
+    const basePoints = 50;
+    const comboMultiplier = 1 + (combo * 0.2);
+    const points = Math.floor(basePoints * comboMultiplier * (1 + perfectStreak * 0.1));
+
+    addScore(points);
+
+    // Show combo indicator
+    if (combo > 1) {
+        showComboIndicator(combo, points);
+    }
+
+    // Update streak display
+    updateStreakDisplay();
+
+    // Reset combo after 3 seconds of inactivity
+    resetComboTimer();
 
     // Check for level up
     if (score > level * 300) {
@@ -284,10 +316,94 @@ function resetPlayer() {
         playerState.trickRotation = 0;
         playerState.canDoubleJump = true;
 
+        // Reset combo on fall
+        resetCombo();
+
+        // Vibration for fall
+        vibrate('heavy');
+
         // Penalty
         score = Math.max(0, score - 50);
         updateScoreDisplay();
     }
+}
+
+// Vibration System (Web Vibration API)
+function vibrate(type) {
+    if ('vibrate' in navigator) {
+        switch(type) {
+            case 'light':
+                navigator.vibrate(10);
+                break;
+            case 'medium':
+                navigator.vibrate(50);
+                break;
+            case 'heavy':
+                navigator.vibrate([50, 30, 50]);
+                break;
+        }
+    }
+}
+
+// Combo System Functions
+function showComboIndicator(comboCount, points) {
+    const comboEl = document.getElementById('combo-indicator');
+    const comboText = document.getElementById('combo-text');
+    const comboPoints = document.getElementById('combo-points');
+
+    if (comboEl && comboText) {
+        comboText.textContent = `${comboCount}x COMBO!`;
+        if (comboPoints) {
+            comboPoints.textContent = `+${points} pts`;
+        }
+
+        comboEl.classList.remove('combo-hidden');
+        comboEl.classList.add('combo-show');
+
+        // Hide after 1.5 seconds
+        setTimeout(() => {
+            comboEl.classList.remove('combo-show');
+            comboEl.classList.add('combo-hidden');
+        }, 1500);
+    }
+}
+
+function updateStreakDisplay() {
+    const streakEl = document.getElementById('streak-indicator');
+    const streakCount = document.getElementById('streak-count');
+
+    if (streakEl && streakCount) {
+        if (perfectStreak > 0) {
+            streakCount.textContent = perfectStreak;
+            streakEl.classList.remove('streak-hidden');
+            streakEl.classList.add('streak-show');
+        } else {
+            streakEl.classList.add('streak-hidden');
+            streakEl.classList.remove('streak-show');
+        }
+    }
+}
+
+function resetCombo() {
+    combo = 0;
+    perfectStreak = 0;
+    playerState.consecutiveTricks = 0;
+    updateStreakDisplay();
+
+    if (comboTimeout) {
+        clearTimeout(comboTimeout);
+        comboTimeout = null;
+    }
+}
+
+function resetComboTimer() {
+    if (comboTimeout) {
+        clearTimeout(comboTimeout);
+    }
+
+    comboTimeout = setTimeout(() => {
+        resetCombo();
+    }, 3000); // Reset after 3 seconds of no tricks
 }
 
 function setupMobileControls() {
